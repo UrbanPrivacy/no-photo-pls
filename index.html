@@ -14,14 +14,15 @@
   <!-- MindAR JS lokal laden -->
   <script src="./libs/mindar-image-three.prod.js"></script>
 
-  <!-- Three.js + WebAR Code -->
+  <!-- Three.js als ES Module + WebAR Code -->
   <script type="module">
     import * as THREE from './libs/three.module.js';
 
-    // Sicherstellen, dass MindAR geladen ist
-    window.addEventListener('load', async () => {
+    // Funktion startet AR sobald MindAR global verfügbar ist
+    function startAR() {
       if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        console.error("MindAR failed to load");
+        console.log("MindAR not loaded yet, retrying...");
+        setTimeout(startAR, 100);
         return;
       }
 
@@ -49,14 +50,17 @@
       anchor.group.add(plane);
 
       // MindAR starten
-      await mindarThree.start();
+      mindarThree.start();
 
       // Renderloop
       renderer.setAnimationLoop(() => {
         renderer.render(scene, camera);
       });
-    });
+    }
+
+    startAR(); // AR starten
   </script>
 </body>
 </html>
+
 
