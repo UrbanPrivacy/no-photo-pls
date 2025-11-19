@@ -11,54 +11,44 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- MindAR JS lokal laden -->
+  <!-- MindAR JS lokal laden als normales Script -->
   <script src="./libs/mindar-image-three.prod.js"></script>
 
-  <!-- Three.js als ES Module -->
+  <!-- Three.js als ES Module + WebAR Code -->
   <script type="module">
     import * as THREE from './libs/three.module.js';
 
-    // Warten, bis MindAR geladen ist
-    function startAR() {
-      if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        console.log("MindAR not loaded yet, retrying...");
-        setTimeout(startAR, 100);
-        return;
-      }
+    // MindARThree ist jetzt global verfügbar über window.MINDAR
+    const MindARThree = window.MINDAR.IMAGE.MindARThree;
 
-      const MindARThree = window.MINDAR.IMAGE.MindARThree;
+    // AR Setup
+    const mindarThree = new MindARThree({
+      container: document.querySelector("#ar-container"),
+      imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
+      uiLoading: "no",
+      uiScanning: "no",
+      videoConfig: { facingMode: 'environment' } // Rückkamera
+    });
 
-      // MindAR Setup
-      const mindarThree = new MindARThree({
-        container: document.querySelector("#ar-container"),
-        imageTargetSrc: './marker-preview.mind', // Dein Marker
-        uiLoading: "no",
-        uiScanning: "no",
-        videoConfig: { facingMode: 'environment' } // Rückkamera
-      });
+    const { renderer, scene, camera } = mindarThree;
 
-      const { renderer, scene, camera } = mindarThree;
+    // Anchor für Marker 0
+    const anchor = mindarThree.addAnchor(0);
 
-      // Anchor für Marker 0
-      const anchor = mindarThree.addAnchor(0);
+    // Halbtransparente Plane als Platzhalter für Blur
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(1,1),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
+    );
+    anchor.group.add(plane);
 
-      // Halbtransparente Plane als Platzhalter für Blur
-      const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(1, 1),
-        new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
-      );
-      anchor.group.add(plane);
+    // MindAR starten
+    mindarThree.start();
 
-      // MindAR starten
-      mindarThree.start();
-
-      // Renderloop
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    }
-
-    startAR(); // AR starten
+    // Renderloop
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
   </script>
 </body>
 </html>
