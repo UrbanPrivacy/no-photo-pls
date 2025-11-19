@@ -11,16 +11,17 @@
 <body>
   <div id="ar-container"></div>
 
+  <!-- Three.js als ES Module -->
   <script type="module">
-    // Three.js lokal importieren
     import * as THREE from './libs/three.module.js';
-    // MindAR lokal importieren
-    import { MindARThree } from './libs/mindar-image-three.prod.js';
+
+    // MindARThree ist über window verfügbar
+    const MindARThree = window.MINDAR.IMAGE.MindARThree;
 
     // MindAR Setup
     const mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
+      imageTargetSrc: './marker-preview.mind',
       uiLoading: "no",
       uiScanning: "no",
       videoConfig: { facingMode: 'environment' } // Rückkamera
@@ -46,5 +47,10 @@
       renderer.render(scene, camera);
     });
   </script>
+
+  <!-- MindAR JS lokal laden -->
+  <script src="./libs/mindar-image-three.prod.js"></script>
 </body>
 </html>
+
+
