@@ -11,7 +11,7 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- Three.js Modul -->
+  <!-- WebAR Script mit ES Modules -->
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
     import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
@@ -21,13 +21,12 @@
       imageTargetSrc: "./marker-preview.mind",
       uiLoading: "no",
       uiScanning: "no",
-      capture: false,
       videoConfig: { facingMode: "environment" } // Rückkamera
     });
 
     const { renderer, scene, camera } = mindarThree;
 
-    // Beispiel: einfache halbtransparente Plane als Blur-Platzhalter
+    // Beispiel: halbtransparente Plane als Platzhalter für Blur
     const geometry = new THREE.PlaneGeometry(1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 });
     const plane = new THREE.Mesh(geometry, material);
