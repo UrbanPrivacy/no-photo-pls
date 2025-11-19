@@ -11,53 +11,33 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- Three.js als ES Module + WebAR Code -->
   <script type="module">
     import * as THREE from './libs/three.module.js';
+    import { MindARThree } from './libs/mindar-image-three.prod.js';
 
-    // Funktion startet AR sobald MindAR global verfügbar ist
-    function startAR() {
-      if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        console.log("MindAR not loaded yet, retrying...");
-        setTimeout(startAR, 100);
-        return;
-      }
+    const mindarThree = new MindARThree({
+      container: document.querySelector("#ar-container"),
+      imageTargetSrc: './marker-preview.mind',
+      uiLoading: "no",
+      uiScanning: "no",
+      videoConfig: { facingMode: 'environment' }
+    });
 
-      const MindARThree = window.MINDAR.IMAGE.MindARThree;
+    const { renderer, scene, camera } = mindarThree;
 
-      // MindAR Setup
-      const mindarThree = new MindARThree({
-        container: document.querySelector("#ar-container"),
-        imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
-        uiLoading: "no",
-        uiScanning: "no",
-        videoConfig: { facingMode: 'environment' } // Rückkamera
-      });
+    const anchor = mindarThree.addAnchor(0);
 
-      const { renderer, scene, camera } = mindarThree;
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(1,1),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
+    );
+    anchor.group.add(plane);
 
-      // Anchor für Marker 0
-      const anchor = mindarThree.addAnchor(0);
+    mindarThree.start();
 
-      // Halbtransparente Plane als Platzhalter für Blur
-      const plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(1,1),
-        new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
-      );
-      anchor.group.add(plane);
-
-      // MindAR starten
-      mindarThree.start();
-
-      // Renderloop
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    }
-
-    startAR(); // AR starten
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
   </script>
 </body>
 </html>
-
-
