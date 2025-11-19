@@ -16,24 +16,25 @@
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
     import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
-    // MindAR Setup
+    // MindAR initialisieren
     const mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: "./marker-preview.mind",
+      imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
       uiLoading: "no",
       uiScanning: "no",
-      videoConfig: { facingMode: "environment" } // Rückkamera
+      videoConfig: { facingMode: 'environment' } // Rückkamera
     });
 
     const { renderer, scene, camera } = mindarThree;
 
-    // Beispiel: halbtransparente Plane als Blur-Platzhalter
-    const geometry = new THREE.PlaneGeometry(1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0.5, transparent: true });
-    const plane = new THREE.Mesh(geometry, material);
+    // Anchor für Marker 0
+    const anchor = mindarThree.addAnchor(0);
 
-    // Marker-Anchor
-    const anchor = mindarThree.addAnchor(0); // Marker 0
+    // Halbtransparente Plane als Platzhalter für Blur
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(1,1),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
+    );
     anchor.group.add(plane);
 
     // MindAR starten
@@ -46,4 +47,3 @@
   </script>
 </body>
 </html>
-
