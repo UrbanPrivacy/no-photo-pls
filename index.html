@@ -11,14 +11,13 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- MindAR JS laden (nicht als ES Module!) -->
+  <!-- MindAR global script -->
   <script src="./libs/mindar-image-three.prod.js"></script>
 
-  <!-- Three.js als ES Module + AR Logik -->
+  <!-- Three.js ES module -->
   <script type="module">
     import * as THREE from './libs/three.module.js';
 
-    // Warten bis MindAR global verfügbar ist
     function startAR() {
       if (!window.MINDAR || !window.MINDAR.IMAGE) {
         console.log("MindAR not loaded yet, retrying...");
@@ -28,31 +27,26 @@
 
       const MindARThree = window.MINDAR.IMAGE.MindARThree;
 
-      // MindAR Setup
       const mindarThree = new MindARThree({
         container: document.querySelector("#ar-container"),
         imageTargetSrc: './marker-preview.mind',
         uiLoading: "no",
         uiScanning: "no",
-        videoConfig: { facingMode: 'environment' } // Rückkamera
+        videoConfig: { facingMode: 'environment' }
       });
 
       const { renderer, scene, camera } = mindarThree;
 
-      // Anchor für Marker 0
       const anchor = mindarThree.addAnchor(0);
 
-      // Beispiel: Halbtransparente Plane als Platzhalter für Blur
       const plane = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
         new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
       );
       anchor.group.add(plane);
 
-      // AR starten
       mindarThree.start();
 
-      // Renderloop
       renderer.setAnimationLoop(() => {
         renderer.render(scene, camera);
       });
