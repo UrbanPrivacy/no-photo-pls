@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>WebAR Starter</title>
+  <title>No Photo AR</title>
   <style>
     body { margin: 0; overflow: hidden; }
     #ar-container { width: 100vw; height: 100vh; }
@@ -11,17 +11,21 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- Three.js als ES Module -->
+  <!-- MindAR JS lokal laden, MUSS vor dem Modul-Code stehen -->
+  <script src="./libs/mindar-image-three.prod.js"></script>
+
+  <!-- Three.js als ES Module + WebAR Code -->
   <script type="module">
+    // Three.js importieren
     import * as THREE from './libs/three.module.js';
 
-    // MindARThree ist über window verfügbar
+    // MindARThree über globales window verfügbar
     const MindARThree = window.MINDAR.IMAGE.MindARThree;
 
     // MindAR Setup
     const mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: './marker-preview.mind',
+      imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
       uiLoading: "no",
       uiScanning: "no",
       videoConfig: { facingMode: 'environment' } // Rückkamera
@@ -39,18 +43,14 @@
     );
     anchor.group.add(plane);
 
-    // Start
-    mindarThree.start();
+    // MindAR starten
+    await mindarThree.start();
 
     // Renderloop
     renderer.setAnimationLoop(() => {
       renderer.render(scene, camera);
     });
   </script>
-
-  <!-- MindAR JS lokal laden -->
-  <script src="./libs/mindar-image-three.prod.js"></script>
 </body>
 </html>
-
 
