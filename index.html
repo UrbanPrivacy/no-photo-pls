@@ -11,11 +11,12 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- WebAR Script mit ES Modules -->
   <script type="module">
+    // Absolute URLs für Three.js und MindAR
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
     import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
+    // MindAR Setup
     const mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
       imageTargetSrc: "./marker-preview.mind",
@@ -26,15 +27,16 @@
 
     const { renderer, scene, camera } = mindarThree;
 
-    // Beispiel: halbtransparente Plane als Platzhalter für Blur
+    // Beispiel: halbtransparente Plane als Blur-Platzhalter
     const geometry = new THREE.PlaneGeometry(1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x000000, opacity: 0.5, transparent: true });
     const plane = new THREE.Mesh(geometry, material);
 
+    // Marker-Anchor
     const anchor = mindarThree.addAnchor(0); // Marker 0
     anchor.group.add(plane);
 
-    // Start MindAR
+    // MindAR starten
     mindarThree.start();
 
     // Animationsloop
