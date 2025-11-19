@@ -20,7 +20,7 @@
 
     function startAR() {
       if (!window.MINDAR || !window.MINDAR.IMAGE) {
-        console.error("MindAR is not loaded yet. Retrying...");
+        console.error("MindAR not loaded yet. Retrying...");
         setTimeout(startAR, 100);
         return;
       }
@@ -45,7 +45,10 @@
       anchor.group.add(plane);
 
       mindarThree.start();
-      renderer.setAnimationLoop(() => renderer.render(scene, camera));
+
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
     }
 
     startAR();
