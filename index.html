@@ -12,11 +12,12 @@
   <div id="ar-container"></div>
 
   <script type="module">
-    // Absolute URLs für Three.js und MindAR
+    // Three.js als ES Module
     import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-    import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+    // MindAR ES Module Version für Browser
+    import { MindARThree } from 'https://unpkg.com/mind-ar@1.2.5/dist/mindar-image-three.module.js';
 
-    // MindAR initialisieren
+    // MindAR Setup
     const mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
       imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
@@ -37,10 +38,10 @@
     );
     anchor.group.add(plane);
 
-    // MindAR starten
+    // Start
     mindarThree.start();
 
-    // Animationsloop
+    // Renderloop
     renderer.setAnimationLoop(() => {
       renderer.render(scene, camera);
     });
