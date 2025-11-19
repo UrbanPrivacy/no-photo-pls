@@ -11,44 +11,50 @@
 <body>
   <div id="ar-container"></div>
 
-  <!-- MindAR JS lokal laden, MUSS vor dem Modul-Code stehen -->
+  <!-- MindAR JS lokal laden -->
   <script src="./libs/mindar-image-three.prod.js"></script>
 
-  <!-- Three.js als ES Module + WebAR Code -->
+  <!-- Three.js + WebAR Code -->
   <script type="module">
-    // Three.js importieren
     import * as THREE from './libs/three.module.js';
 
-    // MindARThree über globales window verfügbar
-    const MindARThree = window.MINDAR.IMAGE.MindARThree;
+    // Sicherstellen, dass MindAR geladen ist
+    window.addEventListener('load', async () => {
+      if (!window.MINDAR || !window.MINDAR.IMAGE) {
+        console.error("MindAR failed to load");
+        return;
+      }
 
-    // MindAR Setup
-    const mindarThree = new MindARThree({
-      container: document.querySelector("#ar-container"),
-      imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
-      uiLoading: "no",
-      uiScanning: "no",
-      videoConfig: { facingMode: 'environment' } // Rückkamera
-    });
+      const MindARThree = window.MINDAR.IMAGE.MindARThree;
 
-    const { renderer, scene, camera } = mindarThree;
+      // MindAR Setup
+      const mindarThree = new MindARThree({
+        container: document.querySelector("#ar-container"),
+        imageTargetSrc: './marker-preview.mind', // Marker-Datei im gleichen Ordner
+        uiLoading: "no",
+        uiScanning: "no",
+        videoConfig: { facingMode: 'environment' } // Rückkamera
+      });
 
-    // Anchor für Marker 0
-    const anchor = mindarThree.addAnchor(0);
+      const { renderer, scene, camera } = mindarThree;
 
-    // Halbtransparente Plane als Platzhalter für Blur
-    const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(1,1),
-      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
-    );
-    anchor.group.add(plane);
+      // Anchor für Marker 0
+      const anchor = mindarThree.addAnchor(0);
 
-    // MindAR starten
-    await mindarThree.start();
+      // Halbtransparente Plane als Platzhalter für Blur
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(1,1),
+        new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.5 })
+      );
+      anchor.group.add(plane);
 
-    // Renderloop
-    renderer.setAnimationLoop(() => {
-      renderer.render(scene, camera);
+      // MindAR starten
+      await mindarThree.start();
+
+      // Renderloop
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
     });
   </script>
 </body>
